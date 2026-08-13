@@ -39,15 +39,18 @@ Add worlds and models folders
 # Install dependencies
 sudo apt update && sudo apt install ros-jazzy-ros-gz ros-jazzy-ros2-control ros-jazzy-ros2-controllers ros-jazzy-gz-ros2-control ros-jazzy-twist-mux
 
-# Swap gazebo classic plugins for gazebo harmonic plugins in ros2_control.xacro and launch_sim.launch.py
-
+# Swap gazebo classic plugins for gazebo harmonic plugins in ros2_control.xacro and launch_sim.launch.py, and create yaml files within config folder
+my_controllers.yaml — wheel geometry (separation: 0.297, radius: 0.033) is pulled straight from your gazebo_control.xacro. If your real robot's actual wheel measurements differ, update these — wrong values mean the robot drives but odometry will be off.
+joystick.yaml — button/axis numbers assume a standard Xbox-layout gamepad (axis 1 = left stick vertical, axis 0 = left stick horizontal, button 4 = LB as the dead-man switch). If you're on keyboard-only or a different controller, this needs adjusting — let me know which and I'll fix the mapping.
+twist_mux.yaml — routes both /cmd_vel_joy (your joystick) and /cmd_vel_tracker (from ball_tracker.launch.py) into the single output, joystick taking priority. No lock/e-stop topic configured — fine for now, just flagging it's empty.
+gaz_ros2_ctl_use_sim.yaml -- for launching i think idk
 
 # Build and launch
 cd ~/Documents/ros2_ws
 colcon build --packages-select auracle --symlink-install && source install/setup.bash
 ros2 launch auracle launch_sim.launch.py
 
-# Drive around using keyboard (oystick.launch.py is already included in launch_sim.launch.py, remapping teleop output to /cmd_vel_joy. However twist_mux.yaml and joystick.yaml don't exixt, so rerouting wont happen)
+# Drive around using keyboard (oystick.launch.py is already included in launch_sim.launch.py, remapping teleop output to /cmd_vel_joy)
 ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r /cmd_vel:=/cmd_vel_joy
 
 
