@@ -1,4 +1,4 @@
-# package creation
+# package creation -- within ros2_ws/src
 ros2 pkg create --build-type ament_cmake auracle \
         --dependencies rclcpp rclpy \
         --license Apache-2.0 \
@@ -14,7 +14,22 @@ install(
 
 # Build
 cd ~/Documents/ros2_ws
-colcon build --packages-select auracle
-source install/setup.bash
+colcon build --symlink-install --packages-select auracle && source install/setup.bash
 
+# Launch rsp - linked to robot.urdf.xacro
+ros2 launch auracle rsp.launch.py use_sim_time:=false use_ros2_control:=false
+
+# Publish joint states
+source ~/Documents/ros2_ws/install/setup.bash && ros2 run joint_state_publisher_gui joint_state_publisher_gui
+
+# Launch rviz2
+ros2 run rviz2 rviz2
+
+# Within rviz
+Set Fixed Frame (top left, Global Options) to base_link (or base_footprint if your urdf uses one).
+Click Add → RobotModel, and set its Description Topic to /robot_description.
+Optionally Add → TF to see the frames.
+
+# Save configuration in config files and launch from config
+ros2 run rviz2 rviz2 -d ~/ros2_ws/src/auracle/config/view_bot.rviz
 
