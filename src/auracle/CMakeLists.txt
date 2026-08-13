@@ -10,9 +10,9 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclpy REQUIRED)
 
-# install launch files, description files, config files, and worlds
+# install directories
 install(
-  DIRECTORY launch description config worlds
+  DIRECTORY launch description config worlds models
   DESTINATION share/${PROJECT_NAME}
 )
 

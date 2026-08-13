@@ -8,7 +8,7 @@ ros2 pkg create --build-type ament_cmake auracle \
 
 # include directories in cmakelists
 install(
-  DIRECTORY launch description config worlds
+  DIRECTORY launch description config worlds models
   DESTINATION share/${PROJECT_NAME}
 )
 
@@ -34,6 +34,15 @@ Optionally Add → TF to see the frames.
 ros2 run rviz2 rviz2 -d ~/Documents/ros2_ws/src/auracle/config/default_rviz.rviz
 
 # Create similar folder structure to one in auracle github and copy worlds and models
+Add worlds and models folders
+
+# Build and launch
+cd ~/ros2_ws
+colcon build --packages-select auracle && source install/setup.bash
+ros2 launch auracle launch_sim.launch.py
+
+# Drive around using keyboard (oystick.launch.py is already included in launch_sim.launch.py, remapping teleop output to /cmd_vel_joy)
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r /cmd_vel:=/cmd_vel_joy
 
 
 
