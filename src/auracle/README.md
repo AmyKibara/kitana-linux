@@ -33,3 +33,7 @@ Optionally Add → TF to see the frames.
 # Save configuration in config files and launch from config (launch->jsp->default_rviz)
 ros2 run rviz2 rviz2 -d ~/Documents/ros2_ws/src/auracle/config/default_rviz.rviz
 
+# Create similar folder structure to one in auracle github and copy worlds and models
+
+
+
