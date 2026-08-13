@@ -23,13 +23,13 @@ ros2 launch auracle rsp.launch.py use_sim_time:=false use_ros2_control:=false
 source ~/Documents/ros2_ws/install/setup.bash && ros2 run joint_state_publisher_gui joint_state_publisher_gui
 
 # Launch rviz2
-ros2 run rviz2 rviz2
+rviz2
 
 # Within rviz
 Set Fixed Frame (top left, Global Options) to base_link (or base_footprint if your urdf uses one).
 Click Add → RobotModel, and set its Description Topic to /robot_description.
 Optionally Add → TF to see the frames.
 
-# Save configuration in config files and launch from config
-ros2 run rviz2 rviz2 -d ~/ros2_ws/src/auracle/config/view_bot.rviz
+# Save configuration in config files and launch from config (launch->jsp->default_rviz)
+ros2 run rviz2 rviz2 -d ~/Documents/ros2_ws/src/auracle/config/default_rviz.rviz
 
