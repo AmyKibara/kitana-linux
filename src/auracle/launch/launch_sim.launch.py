@@ -4,7 +4,7 @@ from ament_index_python.packages import get_package_share_directory
 
 
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 from launch_ros.actions import Node
@@ -12,12 +12,21 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    world_path = os.path.join(get_package_share_directory(package_name), 'worlds', 'gamefield.world')
 
     # Include the robot_state_publisher launch file, provided by our own package. Force sim time to be enabled
     # !!! MAKE SURE YOU SET THE PACKAGE NAME CORRECTLY !!!
 
-    package_name='auracle' #<--- CHANGE ME
+    package_name = 'auracle' #<--- CHANGE ME
+
+    world_path = os.path.join(get_package_share_directory(package_name), 'worlds', 'gamefield.world')
+    models_path = os.path.join(get_package_share_directory(package_name), 'models')
+
+    # Gazebo Harmonic looks up model:// URIs (e.g. model://gamefield) using
+    # GZ_SIM_RESOURCE_PATH, not GAZEBO_MODEL_PATH (that was Gazebo Classic).
+    set_gz_resource_path = SetEnvironmentVariable(
+        name='GZ_SIM_RESOURCE_PATH',
+        value=models_path
+    )
 
     rsp = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
@@ -39,59 +48,49 @@ def generate_launch_description():
             remappings=[('/cmd_vel_out','/diff_cont/cmd_vel_unstamped')]
         )
 
-    gazebo_params_file = os.path.join(get_package_share_directory(package_name),'config','gazebo_params.yaml')
-
-    # Include the Gazebo launch file, provided by the gazebo_ros package
+    # Include the ros_gz_sim launch file (Gazebo Harmonic), and start our maze world
     gazebo = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
-                    get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py')]),
-                    launch_arguments={'world': world_path,'extra_gazebo_args': '--ros-args --params-file ' + gazebo_params_file}.items()
+                    get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py')]),
+                    launch_arguments={'gz_args': ['-r ', world_path]}.items()
              )
 
-    # Run the spawner node from the gazebo_ros package. The entity name doesn't really matter if you only have a single robot.
-    spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
+    # Spawn the robot into Gazebo from the /robot_description topic
+    spawn_entity = Node(package='ros_gz_sim', executable='create',
                         arguments=['-topic', 'robot_description',
-                                   '-entity', 'my_bot'],
+                                   '-name', 'my_bot'],
                         output='screen')
 
+    # Bridge Gazebo's simulation clock onto a ROS topic so nodes using use_sim_time
+    # (robot_state_publisher, controller_manager, rviz, etc) stay in sync with the sim
+    gz_bridge = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        arguments=['/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock'],
+        output='screen'
+    )
 
     diff_drive_spawner = Node(
         package="controller_manager",
-        executable="spawner.py",
+        executable="spawner",
         arguments=["diff_cont"],
     )
 
     joint_broad_spawner = Node(
         package="controller_manager",
-        executable="spawner.py",
+        executable="spawner",
         arguments=["joint_broad"],
     )
 
 
-    # Code for delaying a node (I haven't tested how effective it is)
-    # 
-    # First add the below lines to imports
-    # from launch.actions import RegisterEventHandler
-    # from launch.event_handlers import OnProcessExit
-    #
-    # Then add the following below the current diff_drive_spawner
-    # delayed_diff_drive_spawner = RegisterEventHandler(
-    #     event_handler=OnProcessExit(
-    #         target_action=spawn_entity,
-    #         on_exit=[diff_drive_spawner],
-    #     )
-    # )
-    #
-    # Replace the diff_drive_spawner in the final return with delayed_diff_drive_spawner
-
-
-
     # Launch them all!
     return LaunchDescription([
+        set_gz_resource_path,
         rsp,
         joystick,
         twist_mux,
         gazebo,
+        gz_bridge,
         spawn_entity,
         diff_drive_spawner,
         joint_broad_spawner
