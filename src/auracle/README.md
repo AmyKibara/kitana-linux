@@ -37,7 +37,7 @@ ros2 run rviz2 rviz2 -d ~/Documents/ros2_ws/src/auracle/config/default_rviz.rviz
 Add worlds and models folders
 
 # Install dependencies
-sudo apt update && sudo apt install ros-jazzy-ros-gz ros-jazzy-ros2-control ros-jazzy-ros2-controllers ros-jazzy-gz-ros2-control ros-jazzy-twist-mux
+sudo apt update && sudo apt install ros-jazzy-ros-gz ros-jazzy-ros2-control ros-jazzy-ros2-controllers ros-jazzy-gz-ros2-control ros-jazzy-twist-mux ros-jazzy-twist-stamper
 
 # Swap gazebo classic plugins for gazebo harmonic plugins in ros2_control.xacro and launch_sim.launch.py, and create yaml files within config folder
 my_controllers.yaml — wheel geometry (separation: 0.297, radius: 0.033) is pulled straight from your gazebo_control.xacro. If your real robot's actual wheel measurements differ, update these — wrong values mean the robot drives but odometry will be off.
