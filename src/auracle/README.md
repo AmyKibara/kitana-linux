@@ -56,3 +56,22 @@ source install/setup.bash && ros2 run teleop_twist_keyboard teleop_twist_keyboar
 # Confirm publishing
 ros2 topic echo /cmd_vel_joy 
 ros2 topic echo /diff_cont/cmd_vel_unstamped
+
+# Install mapping dependencies
+sudo apt update && sudo apt install ros-jazzy-slam-toolbox ros-jazzy-navigation2 ros-jazzy-nav2-bringup 
+
+# Launch SLAM_toolbox alongside simulation
+ros2 launch auracle online_async_launch.py use_sim_time:=true
+
+# Open rviz 
+rviz2
+
+Set Fixed Frame (top left, Global Options) to map
+Click Add → By topic → find /map → add the Map display
+Optionally add LaserScan on /scan and TF to watch it build live
+
+# Drive around robot with teleop and fill map on rviz
+source install/setup.bash && ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r /cmd_vel:=/cmd_vel_joy
+
+# Save the map via CLI
+ros2 run nav2_map_server map_saver_cli -f ~/my_map
