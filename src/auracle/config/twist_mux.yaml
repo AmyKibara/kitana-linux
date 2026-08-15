@@ -1,5 +1,7 @@
 twist_mux:
   ros__parameters:
+    use_stamped: false
+
     topics:
       joystick:
         topic: cmd_vel_joy
@@ -10,5 +12,3 @@ twist_mux:
         topic: cmd_vel_tracker
         timeout: 0.5
         priority: 50
-
-    locks: []

@@ -53,4 +53,6 @@ ros2 launch auracle launch_sim.launch.py
 # Drive around using keyboard (oystick.launch.py is already included in launch_sim.launch.py, remapping teleop output to /cmd_vel_joy)
 source install/setup.bash && ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r /cmd_vel:=/cmd_vel_joy
 
-
+# Confirm publishing
+ros2 topic echo /cmd_vel_joy 
+ros2 topic echo /diff_cont/cmd_vel_unstamped
