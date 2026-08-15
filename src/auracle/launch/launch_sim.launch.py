@@ -47,7 +47,6 @@ def generate_launch_description():
             launch_arguments={'gz_args': ['-r ', world_path]}.items()
     )
 
-    # Spawn position lowered slightly so wheels sit closer to ground level
     spawn_entity = Node(
         package='ros_gz_sim', 
         executable='create',
@@ -56,7 +55,7 @@ def generate_launch_description():
             '-name', 'my_bot', 
             '-x', '-2.6',
             '-y', '-1.3',
-            '-z', '0.15',  # <--- Lowered from 0.25 so it settles immediately
+            '-z', '0.15',
             '-R', '0.0',
             '-P', '0.0',
             '-Y', '1.57'
@@ -64,7 +63,6 @@ def generate_launch_description():
         output='screen'
     )
 
-    # Clock bridge
     gz_bridge = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',
@@ -72,7 +70,6 @@ def generate_launch_description():
         output='screen'
     )
 
-    # Controller spawners
     diff_drive_spawner = Node(
         package="controller_manager",
         executable="spawner",
@@ -85,7 +82,6 @@ def generate_launch_description():
         arguments=["joint_broad"],
     )
 
-    # DELAY CONTROLLER SPAWNERS UNTIL ROBOT IS CREATED IN GAZEBO
     delayed_diff_drive_spawner = RegisterEventHandler(
         event_handler=OnProcessStart(
             target_action=spawn_entity,

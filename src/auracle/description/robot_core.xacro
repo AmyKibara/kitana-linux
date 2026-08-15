@@ -79,7 +79,7 @@
     </gazebo>
 
  <!-- LEFT WHEEL ROCKER LINK -->
-    <joint name="left_wheel_rocker_joint" type="continuous">
+    <joint name="left_wheel_rocker_joint" type="fixed">
         <parent link="base_link"/>
         <child link="left_rocker"/>
         <origin xyz="${chassis_length/2} ${chassis_width/2+rocker_width/2} 0" rpy="0 0 ${pi/2}" />
@@ -279,7 +279,7 @@
     </gazebo>
 
     <!-- RIGHT WHEEL ROCKER LINK -->
-    <joint name="right_wheel_rocker_joint" type="continuous">
+    <joint name="right_wheel_rocker_joint" type="fixed">
         <parent link="base_link"/>
         <child link="right_rocker"/>
         <origin xyz="${chassis_length/2} ${-chassis_width/2-rocker_width/2} 0" rpy="0 0 ${pi/2}" />

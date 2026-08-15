@@ -8,7 +8,6 @@ controller_manager:
     joint_broad:
       type: joint_state_broadcaster/JointStateBroadcaster
 
-
 diff_cont:
   ros__parameters:
     publish_rate: 50.0
@@ -19,7 +18,7 @@ diff_cont:
     left_wheel_names: ['left_wheel_one_joint', 'left_wheel_two_joint', 'left_wheel_three_joint']
     right_wheel_names: ['right_wheel_one_joint', 'right_wheel_two_joint', 'right_wheel_three_joint']
 
-    wheel_separation: 0.22 # estimate from chassis_width/rocker geometry - tune by driving straight and comparing travel
+    wheel_separation: 0.22
     wheel_radius: 0.033
 
     use_stamped_vel: false
