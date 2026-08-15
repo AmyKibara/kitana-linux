@@ -58,7 +58,14 @@ def generate_launch_description():
     # Spawn the robot into Gazebo from the /robot_description topic
     spawn_entity = Node(package='ros_gz_sim', executable='create',
                         arguments=['-topic', 'robot_description',
-                                   '-name', 'my_bot'],
+                                   '-name', 'my_bot', 
+                                   '-x', '-2.6', #increase x to move to right
+                                   '-y', '-1.3', #increase y to move up
+                                   '-z', '0.25', #Z-Offset to avoid collision with ground
+                                   '-R', '0.0', #ROLL IN RADIANS
+                                   '-P', '0.0', #PITCH IN RADIANS
+                                   '-Y', '1.57' #YAW IN RADIANS, 1.57 = 90 degrees
+                                   ],
                         output='screen')
 
     # Bridge Gazebo's simulation clock onto a ROS topic so nodes using use_sim_time

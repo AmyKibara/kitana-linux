@@ -51,7 +51,6 @@ colcon build --packages-select auracle --symlink-install && source install/setup
 ros2 launch auracle launch_sim.launch.py
 
 # Drive around using keyboard (oystick.launch.py is already included in launch_sim.launch.py, remapping teleop output to /cmd_vel_joy)
-ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r /cmd_vel:=/cmd_vel_joy
-
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap cmd_vel:=/cmd_vel
 
 
