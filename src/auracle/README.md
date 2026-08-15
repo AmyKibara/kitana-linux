@@ -60,8 +60,20 @@ ros2 topic echo /diff_cont/cmd_vel_unstamped
 # Install mapping dependencies
 sudo apt update && sudo apt install ros-jazzy-slam-toolbox ros-jazzy-navigation2 ros-jazzy-nav2-bringup 
 
-# Launch SLAM_toolbox alongside simulation
-ros2 launch auracle online_async_launch.py use_sim_time:=true
+# Copy required files from official nav2 packages
+cp /opt/ros/jazzy/share/nav2_bringup/params/nav2_params.yaml \
+   ~/Documents/ros2_ws/src/auracle/config/nav2_params.yaml
+
+# Edit nav2_params.yaml
+robot_base_frame → should match your URDF's base_link
+robot_radius / footprint under the costmap configs → match your chassis dimensions
+odom_topic → should be /diff_cont/odom (your diff_drive_controller's output) unless you remap it
+scan_topic in the costmap observation_sources/plugins → matches your lidar's topic (/scan based on lidar.xacro)
+behavior_server block → should already say behavior_plugins (not recovery_plugins) in a current nav2_bringup copy, since you're pulling from Jazzy's package directly
+
+# Launch the simualtion on gazebo and SLAM_toolbox alongside simulation
+source install/setup.bash && ros2 launch auracle launch_sim.launch.py
+source install/setup.bash && ros2 launch auracle online_async_launch.py use_sim_time:=true
 
 # Open rviz 
 rviz2

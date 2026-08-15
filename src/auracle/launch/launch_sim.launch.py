@@ -35,18 +35,10 @@ def generate_launch_description():
 
     twist_mux_params = os.path.join(get_package_share_directory(package_name),'config','twist_mux.yaml')
     twist_mux = Node(
-    package="twist_mux",
-    executable="twist_mux",
-    parameters=[twist_mux_params, {'use_sim_time': True}],
-    remappings=[('/cmd_vel_out', '/cmd_vel_unstamped')]
-)
-
-    twist_stamper = Node(
-        package='twist_stamper',
-        executable='twist_stamper',
-        parameters=[{'use_sim_time': True}],
-        remappings=[('/cmd_vel_in', '/cmd_vel_unstamped'),
-                    ('/cmd_vel_out', '/diff_cont/cmd_vel')]
+        package="twist_mux",
+        executable="twist_mux",
+        parameters=[twist_mux_params, {'use_sim_time': True}],
+        remappings=[('/cmd_vel_out','/diff_cont/cmd_vel_unstamped')]
     )
 
     gazebo = IncludeLaunchDescription(
@@ -74,7 +66,10 @@ def generate_launch_description():
     gz_bridge = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',
-        arguments=['/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock'],
+        arguments=[
+            '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock',
+            '/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan',
+        ],
         output='screen'
     )
 
@@ -109,7 +104,6 @@ def generate_launch_description():
         rsp,
         joystick,
         twist_mux,
-        twist_stamper,
         gazebo,
         gz_bridge,
         spawn_entity,
