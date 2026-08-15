@@ -1,6 +1,8 @@
 slam_toolbox:
   ros__parameters:
 
+    debug_logging: true
+
     # Plugin params
     solver_plugin: solver_plugins::CeresSolver
     ceres_linear_solver: SPARSE_NORMAL_CHOLESKY
@@ -12,7 +14,7 @@ slam_toolbox:
     # ROS Parameters
     odom_frame: odom
     map_frame: map
-    base_frame: base_footprint
+    base_frame: base_link
     scan_topic: /scan
     use_map_saver: true
     mode: mapping #localization

@@ -49,11 +49,21 @@ def generate_launch_description():
         name='slam_toolbox',
         output='screen')
 
+    start_lifecycle_manager = Node(
+        package='nav2_lifecycle_manager',
+        executable='lifecycle_manager',
+        name='lifecycle_manager_slam',
+        output='screen',
+        parameters=[{'autostart': True},
+                    {'node_names': ['slam_toolbox']},
+                    {'use_sim_time': use_sim_time}])
+
     ld = LaunchDescription()
 
     ld.add_action(declare_use_sim_time_argument)
     ld.add_action(declare_params_file_cmd)
     ld.add_action(log_param_change)
     ld.add_action(start_async_slam_toolbox_node)
+    ld.add_action(start_lifecycle_manager)
 
     return ld

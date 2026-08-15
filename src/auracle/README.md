@@ -75,6 +75,10 @@ behavior_server block → should already say behavior_plugins (not recovery_plug
 source install/setup.bash && ros2 launch auracle launch_sim.launch.py
 source install/setup.bash && ros2 launch auracle online_async_launch.py use_sim_time:=true
 
+# Confirm scan and map topic exists for mapping and it publishes data
+ros2 topic list
+
+
 # Open rviz 
 rviz2
 
