@@ -42,7 +42,8 @@ def generate_launch_description():
     start_async_slam_toolbox_node = Node(
         parameters=[
           actual_params_file,
-          {'use_sim_time': use_sim_time}
+          {'use_sim_time': use_sim_time,
+           'use_lifecycle_manager': True}
         ],
         package='slam_toolbox',
         executable='async_slam_toolbox_node',

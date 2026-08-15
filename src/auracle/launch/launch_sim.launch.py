@@ -73,6 +73,14 @@ def generate_launch_description():
         output='screen'
     )
 
+    laser_frame_alias = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        arguments=['--frame-id', 'laser_frame',
+                   '--child-frame-id', 'my_bot/base_link/laser'],
+        output='screen'
+    )
+
     diff_drive_spawner = Node(
         package="controller_manager",
         executable="spawner",
@@ -106,6 +114,7 @@ def generate_launch_description():
         twist_mux,
         gazebo,
         gz_bridge,
+        laser_frame_alias,
         spawn_entity,
         delayed_diff_drive_spawner,
         delayed_joint_broad_spawner

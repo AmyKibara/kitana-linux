@@ -64,7 +64,7 @@ sudo apt update && sudo apt install ros-jazzy-slam-toolbox ros-jazzy-navigation2
 cp /opt/ros/jazzy/share/nav2_bringup/params/nav2_params.yaml \
    ~/Documents/ros2_ws/src/auracle/config/nav2_params.yaml
 
-# Edit nav2_params.yaml
+# Edit nav2_params.yaml and mapper_params_online_async
 robot_base_frame → should match your URDF's base_link
 robot_radius / footprint under the costmap configs → match your chassis dimensions
 odom_topic → should be /diff_cont/odom (your diff_drive_controller's output) unless you remap it
