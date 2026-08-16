@@ -71,7 +71,9 @@ odom_topic → should be /diff_cont/odom (your diff_drive_controller's output) u
 scan_topic in the costmap observation_sources/plugins → matches your lidar's topic (/scan based on lidar.xacro)
 behavior_server block → should already say behavior_plugins (not recovery_plugins) in a current nav2_bringup copy, since you're pulling from Jazzy's package directly
 
-# Launch the simualtion on gazebo and SLAM_toolbox alongside simulation
+# Build and launch the simualtion on gazebo and SLAM_toolbox alongside simulation
+cd ~/Documents/ros2_ws
+colcon build --packages-select auracle --symlink-install 
 source install/setup.bash && ros2 launch auracle launch_sim.launch.py
 source install/setup.bash && ros2 launch auracle online_async_launch.py use_sim_time:=true
 
@@ -89,5 +91,6 @@ Optionally add LaserScan on /scan and TF to watch it build live
 # Drive around robot with teleop and fill map on rviz
 source install/setup.bash && ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r /cmd_vel:=/cmd_vel_joy
 
-# Save the map via CLI
-ros2 run nav2_map_server map_saver_cli -f ~/my_map
+# Save the map via CLI - saves to home folder, navigate and move to workspace
+ros2 run nav2_map_server map_saver_cli -f ~/map_1
+mv ~/map_1.* .
