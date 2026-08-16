@@ -94,3 +94,8 @@ source install/setup.bash && ros2 run teleop_twist_keyboard teleop_twist_keyboar
 # Save the map via CLI - saves to home folder, navigate and move to workspace
 ros2 run nav2_map_server map_saver_cli -f ~/map_1
 mv ~/map_1.* .
+
+# Improve map quality
+Set min_laser_range in mapper_param_online_async.yaml to 0.4 from 0.0, minimum_travel_distance/heading: 0.5 vs. your 0.2, and a bigger scan_buffer_size (30 vs 10) with link_scan_maximum_distance: 0.5 vs your 1.5
+Wheel calibration: your wheel_separation: 0.22 / wheel_radius: 0.033 in my_controllers.yaml should be double-checked against the actual physical robot with a tape measure/caliper — a few-mm error here directly causes rotational drift of exactly the kind you're seeing, and it's free to fix.
+launch_robot.launch.py sets use_sim_time: 'false' for rsp but hardcodes {'use_sim_time': True} on twist_mux and twist_stamper even in the real-robot launch. Probably copy-paste leftover from sim — worth cleaning up so all nodes agree on clock source.
