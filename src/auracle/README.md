@@ -58,7 +58,7 @@ ros2 topic echo /cmd_vel_joy
 ros2 topic echo /diff_cont/cmd_vel_unstamped
 
 # Install mapping dependencies
-sudo apt update && sudo apt install ros-jazzy-slam-toolbox ros-jazzy-navigation2 ros-jazzy-nav2-bringup 
+sudo apt update && sudo apt install ros-jazzy-slam-toolbox ros-jazzy-navigation2 ros-jazzy-nav2-bringup libserial-dev
 
 # Copy required files from official nav2 packages
 cp /opt/ros/jazzy/share/nav2_bringup/params/nav2_params.yaml \
@@ -72,14 +72,12 @@ scan_topic in the costmap observation_sources/plugins → matches your lidar's t
 behavior_server block → should already say behavior_plugins (not recovery_plugins) in a current nav2_bringup copy, since you're pulling from Jazzy's package directly
 
 # Build and launch the simualtion on gazebo and SLAM_toolbox alongside simulation
-cd ~/Documents/ros2_ws
-colcon build --packages-select auracle --symlink-install 
+cd ~/Documents/ros2_ws && colcon build --packages-select auracle --symlink-install 
 source install/setup.bash && ros2 launch auracle launch_sim.launch.py
 source install/setup.bash && ros2 launch auracle online_async_launch.py use_sim_time:=true
 
 # Confirm scan and map topic exists for mapping and it publishes data
 ros2 topic list
-
 
 # Open rviz 
 rviz2
@@ -99,3 +97,5 @@ mv ~/map_1.* .
 Set min_laser_range in mapper_param_online_async.yaml to 0.4 from 0.0, minimum_travel_distance/heading: 0.5 vs. your 0.2, and a bigger scan_buffer_size (30 vs 10) with link_scan_maximum_distance: 0.5 vs your 1.5
 Wheel calibration: your wheel_separation: 0.22 / wheel_radius: 0.033 in my_controllers.yaml should be double-checked against the actual physical robot with a tape measure/caliper — a few-mm error here directly causes rotational drift of exactly the kind you're seeing, and it's free to fix.
 launch_robot.launch.py sets use_sim_time: 'false' for rsp but hardcodes {'use_sim_time': True} on twist_mux and twist_stamper even in the real-robot launch. Probably copy-paste leftover from sim — worth cleaning up so all nodes agree on clock source.
+
+# Add cpp executables to cmakelists and package.xml

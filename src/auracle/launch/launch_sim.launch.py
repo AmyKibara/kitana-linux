@@ -49,6 +49,21 @@ def generate_launch_description():
                     ('/cmd_vel_out', '/diff_cont/cmd_vel')]
     )
 
+    # NEW: fuses diff_cont's wheel odometry with the IMU and publishes the
+    # odom->base_link TF. diff_cont has enable_odom_tf:false specifically so
+    # this node is the ONLY thing broadcasting that transform - without it
+    # running, nothing publishes odom->base_link at all and slam_toolbox has
+    # no way to transform incoming scans, which is why they were queuing up
+    # and getting dropped.
+    ekf_params = os.path.join(get_package_share_directory(package_name), 'config', 'ekf.yaml')
+    robot_localization_node = Node(
+        package='robot_localization',
+        executable='ekf_node',
+        name='ekf_filter_node',
+        output='screen',
+        parameters=[ekf_params, {'use_sim_time': True}]
+    )
+
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py')]),
@@ -121,6 +136,7 @@ def generate_launch_description():
         joystick,
         twist_mux,
         twist_stamper,
+        robot_localization_node,
         gazebo,
         gz_bridge,
         laser_frame_alias,
