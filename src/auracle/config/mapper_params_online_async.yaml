@@ -48,22 +48,25 @@ slam_toolbox:
     scan_buffer_maximum_scan_distance: 10.0
     link_match_minimum_response_fine: 0.1  
     link_scan_maximum_distance: 0.5
-    # Tightened loop closure thresholds (matching robot_2's field-tuned values):
-    # a false loop closure - the matcher confidently snapping two poses together
-    # that weren't actually the same place - tears the map exactly the way your
-    # crisscrossed screenshot shows. A smaller search distance and higher
-    # response thresholds require much more confident matches before accepting
-    # a loop closure, at the cost of being slightly more conservative about
-    # closing genuine loops.
-    loop_search_maximum_distance: 2.0
+    # Tightened loop closure thresholds further after a second false closure
+    # ("the algorithm recorrected") still got through with the first pass of
+    # tightening. Shrinking the search radius means a candidate match has to
+    # be genuinely close in space to even be considered (less perceptual
+    # aliasing between similar-looking spots), and raising both response
+    # thresholds + the chain size means it needs a longer run of consistently
+    # good matches, not just one lucky-looking scan, before it's allowed to
+    # warp the graph. Trade-off: it'll occasionally miss closing a loop it
+    # really should close, which just means slightly more accumulated drift
+    # in very long runs - much cheaper than a bad snap.
+    loop_search_maximum_distance: 1.0
     do_loop_closing: true 
-    loop_match_minimum_chain_size: 10           
+    loop_match_minimum_chain_size: 15           
     loop_match_maximum_variance_coarse: 3.0  
-    loop_match_minimum_response_coarse: 0.45    
-    loop_match_minimum_response_fine: 0.55
+    loop_match_minimum_response_coarse: 0.55    
+    loop_match_minimum_response_fine: 0.65
 
     # Correlation Parameters - Correlation Parameters
-    correlation_search_space_dimension: 0.7
+    correlation_search_space_dimension: 0.5
     correlation_search_space_resolution: 0.01
     correlation_search_space_smear_deviation: 0.1 
 
