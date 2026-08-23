@@ -84,6 +84,6 @@ Optionally add LaserScan on /scan and TF to watch it build live
 source install/setup.bash && ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r /cmd_vel:=/cmd_vel_joy
 
 # Save the map via CLI - saves to home folder, navigate and move to workspace
-ros2 run nav2_map_server map_saver_cli -f ~/map_2
-mv ~/map_2.* .
+ros2 run nav2_map_server map_saver_cli -f ~/map_3
+mv ~/map_3.* .
 
