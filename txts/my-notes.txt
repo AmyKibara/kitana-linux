@@ -1,0 +1,30 @@
+stash changes, pull, pop, push
+git stash
+git pull --rebase
+git stash pop
+git add .
+commit and push and sync
+
+
+robot.urdf.xacro includes robot_core, ros2_control, gazebo_control, lidar, camera, face; robot_core includes inertial_macros
+
+installing and updating vs code
+Install dependencies and download Microsoft's GPG key:
+sudo apt update
+sudo apt install curl gpg -y
+curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | sudo gpg --dearmor --yes -o /usr/share/keyrings/microsoft.gpg
+
+Add the VS Code repository:
+echo "deb [arch=amd64,arm64,armhf signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/code stable main" | sudo tee /etc/apt/sources.list.d/vscode.list > /dev/null
+
+Install VS Code:
+sudo apt update
+sudo apt install code -y
+
+VS Code will update automatically whenever you run your regular system updates
+sudo apt update && sudo apt upgrade -y
+
+If you prefer a direct download:
+Navigate to your Downloads folder and install it:Navigate to your Downloads folder and install it:
+sudo apt install ./code_*.deb
+(Installing the .deb file automatically adds Microsoft's APT repository, so future updates can be handled via sudo apt update)
