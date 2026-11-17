@@ -5,6 +5,9 @@ git stash pop
 git add .
 commit and push and sync
 
+The grey square off to the upper right is the global costmap, and it never loaded your map. A costmap that doesn’t get a map falls back to a 5 m × 5 m box with its corner at (0,0), which matches what you see. The map you can see is the separate Map display, which got its data fine. So Nav2 thinks the world is only that empty box, and any goal outside it fails or gets rejected.
+
+RViz’s costmap palette is cyan for the inflated zone around walls, pink to red for high cost, and purple for walls themselves. Nearly all of your free space is cyan or pink, because inflation_radius: 0.7 is large for a narrow game field. The planner can still find paths, but the robot will hug the centre lines and may refuse tight gaps. In nav2_params.yaml, set the inflation layer in both the local and global costmaps
 
 robot.urdf.xacro includes robot_core, ros2_control, gazebo_control, lidar, camera, face; robot_core includes inertial_macros
 
